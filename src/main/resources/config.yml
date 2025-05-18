@@ -1,0 +1,10 @@
+# Combat Settings
+combat:
+  disable-shields: false # Disables the use of shields.
+  disable-sweep-attacks: false # Disable sweeping attacks.
+  remove-cooldown: true # Remove the cooldown from new versions.
+  disable-offhand: false # Disables offhand use.
+
+# Pearl Settings
+pearl:
+  no_damage_ticks: 10 # The amount of no damage ticks after using an enderpearl.
