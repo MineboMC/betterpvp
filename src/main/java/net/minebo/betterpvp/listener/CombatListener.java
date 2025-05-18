@@ -21,10 +21,10 @@ public class CombatListener implements Listener {
 
     /**
      * Changes the attack speed of a player to remove the 1.9+ hit penalty.
-     * @param event PlayerLoginEvent
+     * @param event PlayerJoinEvent
      */
     @EventHandler
-    public void onLogin(PlayerLoginEvent event) {
+    public void onJoin(PlayerJoinEvent event) {
         Player player = Bukkit.getPlayer(event.getPlayer().getUniqueId());
         if (player != null && BetterPvP.getInstance().getConfig().getBoolean("combat.remove-cooldown")) {
             Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(2048.0);
