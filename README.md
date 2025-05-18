@@ -1,14 +1,14 @@
-# MCRaidz
-This plugin allows for all the custom features on our MCRaidz server.
+# BetterPvP
+This plugin handles pvp on our servers..
 
 # Download
-To setup MCRaidz usage with maven, put the following in your pom.xml
+To setup BetterPvP usage with maven, put the following in your pom.xml
 
 ```xml
 <dependencies>
     <dependency>
         <groupId>net.minebo</groupId>
-        <artifactId>mcraidz</artifactId>
+        <artifactId>betterpvp</artifactId>
         <version>1.0-DEV</version>
         <scope>provided</scope>
     </dependency>

@@ -1,7 +1,7 @@
 name: BetterPvP
 version: '1.0-DEV'
 description: "A plugin that makes combat on 1.20 more \"favorable\"."
-website: "https://github.com/Minebo/betterpvp"
+website: "https://github.com/MineboMC/betterpvp"
 authors: ["Ian Rich"]
 main: net.minebo.betterpvp.BetterPvP
 api-version: '1.20'
