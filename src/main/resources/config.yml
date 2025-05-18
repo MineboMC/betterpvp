@@ -7,4 +7,8 @@ combat:
 
 # Pearl Settings
 pearl:
-  no_damage_ticks: 10 # The amount of no damage ticks after using an enderpearl.
+  no-damage-ticks: 10 # The amount of no damage ticks after using an enderpearl.
+
+# Regen Settings
+regen:
+  heal-rate: 3 # The rate of healing.

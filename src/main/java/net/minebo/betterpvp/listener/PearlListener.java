@@ -105,11 +105,11 @@ public class PearlListener implements Listener {
             return;
         }
 
-        final int ticks = (isTickingCause || isEnderpearlDamage) ? 0 : BetterPvP.getInstance().getConfig().getInt("pearl.no_damage_ticks");
+        final int ticks = (isTickingCause || isEnderpearlDamage) ? 0 : BetterPvP.getInstance().getConfig().getInt("pearl.no-damage-ticks");
 
         if (isTickingCause) {
             recentlyTakenTickDamage.add(uniqueId);
-            new Scheduler(BetterPvP.getInstance()).sync(() -> recentlyTakenTickDamage.remove(uniqueId)).delay(BetterPvP.getInstance().getConfig().getInt("pearl.no_damage_ticks")).run();
+            new Scheduler(BetterPvP.getInstance()).sync(() -> recentlyTakenTickDamage.remove(uniqueId)).delay(BetterPvP.getInstance().getConfig().getInt("pearl.no-damage-ticks")).run();
         }
 
         new Scheduler(BetterPvP.getInstance()).sync(() -> {
