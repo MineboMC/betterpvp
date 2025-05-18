@@ -13,6 +13,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * This listener handles our regen settings.
+ */
 public class RegenListener implements Listener {
 
     private final List<UUID> recentlyHealed = Lists.newArrayList();

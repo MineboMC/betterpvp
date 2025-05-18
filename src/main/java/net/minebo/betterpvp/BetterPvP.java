@@ -2,6 +2,7 @@ package net.minebo.betterpvp;
 
 import lombok.Getter;
 import net.minebo.betterpvp.listener.CombatListener;
+import net.minebo.betterpvp.listener.KnockbackListener;
 import net.minebo.betterpvp.listener.PearlListener;
 import net.minebo.betterpvp.listener.RegenListener;
 import org.bukkit.Bukkit;
@@ -13,16 +14,14 @@ public class BetterPvP extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
         instance = this;
         this.saveDefaultConfig();
 
         Bukkit.getPluginManager().registerEvents(new CombatListener(), this);
         Bukkit.getPluginManager().registerEvents(new PearlListener(), this);
         Bukkit.getPluginManager().registerEvents(new RegenListener(), this);
-    }
-
-    @Override
-    public void onDisable() {
+        Bukkit.getPluginManager().registerEvents(new KnockbackListener(), this);
 
     }
 

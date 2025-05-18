@@ -12,3 +12,15 @@ pearl:
 # Regen Settings
 regen:
   heal-rate: 3 # The rate of healing.
+
+# Knockback Settings (<3 hcfrevival)
+kb:
+  ground-check: false # Ensure player is on ground for sprint.
+  values:
+    horizontal: 0.35 # Changes the horizontal kb value.
+    vertical: 0.35 # Changes the vertical kb value.
+    extra-horizontal: 0.425 # Changes the extra horizontal kb value.
+    extra-vertical: 0.085 # Changes the extra vertical kb value.
+    vertical-limit: 0.4 # Changes the vertical limit kb value.
+    sprint-reset-modifier: 1.0 # Changes the sprint reset modifier kb value.
+    sprint-modifier: 0.5 # Changes the sprint modifier kb value.
