@@ -132,21 +132,6 @@ public class CombatListener implements Listener {
     }
 
     /**
-     * Disables shields.
-     * @param event PlayerInteractEvent
-     */
-    @EventHandler
-    public void onShieldUse(PlayerInteractEvent event) {
-        if(BetterPvP.getInstance().getConfig().getBoolean("combat.disable-sields")) {
-            Player player = event.getPlayer();
-            if (player.getInventory().getItemInOffHand().getType() == Material.SHIELD) {
-                event.setCancelled(true);
-                player.getInventory().setItemInOffHand(null); // optional
-            }
-        }
-    }
-
-    /**
      * Disables the use of the offhand slot.
      * @param event PlayerSwapHandItemsEvent
      */
