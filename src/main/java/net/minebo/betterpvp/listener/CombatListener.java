@@ -1,23 +1,43 @@
 package net.minebo.betterpvp.listener;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.PacketListener;
+import com.github.retrooper.packetevents.event.PacketListenerPriority;
+import com.github.retrooper.packetevents.event.PacketReceiveEvent;
+import com.github.retrooper.packetevents.protocol.packettype.PacketType;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
+import com.google.common.collect.Queues;
+import lombok.Getter;
 import net.minebo.betterpvp.BetterPvP;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import net.minebo.cobalt.packetevents.PacketEventsHandler;
+import net.minebo.cobalt.scheduler.Scheduler;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.scheduler.BukkitTask;
 
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * A listener that handles combat settings.
  */
 public class CombatListener implements Listener {
+
+    public Map<UUID, Long> lastHit = new HashMap<>();
+
+    public CombatListener() {
+        if(PacketEvents.getAPI() == null) new PacketEventsHandler(BetterPvP.getInstance());
+    }
 
     /**
      * Changes the attack speed of a player to remove the 1.9+ hit penalty.
@@ -27,7 +47,8 @@ public class CombatListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = Bukkit.getPlayer(event.getPlayer().getUniqueId());
         if (player != null && BetterPvP.getInstance().getConfig().getBoolean("combat.remove-cooldown")) {
-            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(2048.0);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(40.0);
+            player.setMaximumNoDamageTicks(20);
             player.saveData();
         }
     }
@@ -42,10 +63,35 @@ public class CombatListener implements Listener {
 
         if(BetterPvP.getInstance().getConfig().getBoolean("combat.remove-cooldown")) {
             Player player = event.getPlayer();
-            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(2048.0);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(40.0);
+            player.setMaximumNoDamageTicks(20);
             player.saveData();
         }
     }
+
+    /**
+     * A way of setting delay for attacks when using old combat.
+     * @param event EntityDamageByEntityEvent
+     */
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player) {
+            Player damager = (Player) event.getDamager();
+            long now = System.currentTimeMillis();
+            long cooldownMillis = 500; // .5 seconds - 1.8 delay
+
+            if (lastHit.containsKey(damager.getUniqueId())) {
+                long last = lastHit.get(damager.getUniqueId());
+                if (now - last < cooldownMillis) {
+                    event.setCancelled(true); // Prevent hitting too soon
+                    return;
+                }
+            }
+
+            lastHit.put(damager.getUniqueId(), now);
+        }
+    }
+
 
     /**
      * Ensures that attack speed is kept when changing worlds.
@@ -55,7 +101,8 @@ public class CombatListener implements Listener {
     public void onWorldChange(PlayerChangedWorldEvent event) {
         if(BetterPvP.getInstance().getConfig().getBoolean("combat.remove-cooldown")) {
             final Player player = event.getPlayer();
-            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(2048.0);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(40.0);
+            player.setMaximumNoDamageTicks(20);
             player.saveData();
         }
     }
