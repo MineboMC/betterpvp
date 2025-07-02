@@ -13,7 +13,7 @@ public class PushListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        if(BetterPvP.getInstance().getConfig().getBoolean("misc.allow-pushing-players")) addPlayerNoCollision(e.getPlayer());
+        if(!BetterPvP.getInstance().getConfig().getBoolean("misc.allow-pushing-players")) addPlayerNoCollision(e.getPlayer());
     }
 
     public void addPlayerNoCollision(Player player) {
