@@ -13,6 +13,10 @@ pearl:
 regen:
   heal-rate: 3 # The rate of healing.
 
+# Other Misc Settings
+misc:
+  allow-pushing-players: false
+
 # Knockback Settings (<3 hcfrevival)
 kb:
   ground-check: false # Ensure player is on ground for sprint.
