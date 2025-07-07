@@ -38,10 +38,6 @@ public class CombatListener implements Listener {
 
     public Map<UUID, Long> lastHit = new HashMap<>();
 
-    public CombatListener() {
-        if(PacketEvents.getAPI() == null) new PacketEventsHandler(BetterPvP.getInstance());
-    }
-
     /**
      * Changes the attack speed of a player to remove the 1.9+ hit penalty.
      * @param event PlayerJoinEvent
@@ -56,6 +52,9 @@ public class CombatListener implements Listener {
             }
             player.setMaximumNoDamageTicks(20);
             // No need to call player.saveData()
+        } else {
+            AttributeInstance attackSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
+            attackSpeed.setBaseValue(attackSpeed.getDefaultValue());
         }
         // Pushing logic
         if (BetterPvP.getInstance().getConfig().getBoolean("movement.disable-pushing-players")) {
