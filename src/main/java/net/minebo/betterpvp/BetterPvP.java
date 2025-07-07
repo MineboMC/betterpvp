@@ -19,7 +19,6 @@ public class BetterPvP extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PearlListener(), this);
         Bukkit.getPluginManager().registerEvents(new RegenListener(), this);
         Bukkit.getPluginManager().registerEvents(new KnockbackListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PushListener(), this);
         Bukkit.getPluginManager().registerEvents(new ShieldListener(), this);
 
     }

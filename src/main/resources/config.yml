@@ -2,8 +2,9 @@
 combat:
   disable-shields: false # Disables the use of shields.
   disable-sweep-attacks: false # Disable sweeping attacks.
-  remove-cooldown: true # Remove the cooldown from new versions.
+  remove-cooldown: false # Remove the cooldown from new versions.
   disable-offhand: false # Disables offhand use.
+  critical-multiplier: 1.2 # 1.5 is 50% (default) and will add 50% damage when you crit.
 
 # Pearl Settings
 pearl:
@@ -14,8 +15,8 @@ regen:
   heal-rate: 3 # The rate of healing.
 
 # Other Misc Settings
-misc:
-  allow-pushing-players: false
+movement:
+  disable-pushing-players: true # Disable players pushing other players.
 
 # Knockback Settings (<3 hcfrevival)
 kb:

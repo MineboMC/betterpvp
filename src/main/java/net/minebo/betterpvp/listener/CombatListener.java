@@ -22,7 +22,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,12 +47,20 @@ public class CombatListener implements Listener {
      * @param event PlayerJoinEvent
      */
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        Player player = Bukkit.getPlayer(event.getPlayer().getUniqueId());
-        if (player != null && BetterPvP.getInstance().getConfig().getBoolean("combat.remove-cooldown")) {
-            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(40.0);
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        if (BetterPvP.getInstance().getConfig().getBoolean("combat.remove-cooldown")) {
+            AttributeInstance attackSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
+            if (attackSpeed != null) {
+                attackSpeed.setBaseValue(40.0);
+            }
             player.setMaximumNoDamageTicks(20);
-            player.saveData();
+            // No need to call player.saveData()
+        }
+        // Pushing logic
+        if (BetterPvP.getInstance().getConfig().getBoolean("movement.disable-pushing-players")) {
+            addPlayerNoCollision(player);
+            Bukkit.getOnlinePlayers().forEach(this::addPlayerNoCollision);
         }
     }
 
@@ -92,6 +103,37 @@ public class CombatListener implements Listener {
         }
     }
 
+    /**
+     * A way of changing the amount of damage from critical hits.
+     * @param event EntityDamageByEntityEvent
+     */
+    @EventHandler
+    public void onCriticalHit(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player)) return;
+        Player player = (Player) event.getDamager();
+
+        // Detect crits. This is a simplified check.
+        if (isCriticalHit(player)) {
+            double serverCritMultiplier = 1.5;
+            double customCritMultiplier = BetterPvP.getInstance().getConfig().getDouble("combat.critical-multiplier");
+
+            // Remove server's crit, apply custom crit
+            double baseDamage = event.getDamage() / serverCritMultiplier;
+            event.setDamage(baseDamage * customCritMultiplier);
+        }
+    }
+
+    /**
+     * Decides if it's a critical hit or not.
+     * @param player Player
+     */
+    private boolean isCriticalHit(Player player) {
+        return player.getFallDistance() > 0.0F &&
+                !player.isOnGround() &&
+                !player.isInsideVehicle() &&
+                !player.hasPotionEffect(PotionEffectType.BLINDNESS) &&
+                !player.isSprinting();
+    }
 
     /**
      * Ensures that attack speed is kept when changing worlds.
@@ -140,6 +182,16 @@ public class CombatListener implements Listener {
         if(BetterPvP.getInstance().getConfig().getBoolean("combat.disable-offhand")) {
             event.setCancelled(true); // block swap to offhand
         }
+    }
+
+    public void addPlayerNoCollision(Player player) {
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        Team team = scoreboard.getTeam("no-collision");
+        if (team == null) {
+            team = scoreboard.registerNewTeam("no-collision");
+            team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+        }
+        team.addEntry(player.getName());
     }
 
 }
