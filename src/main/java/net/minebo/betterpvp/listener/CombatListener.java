@@ -185,9 +185,11 @@ public class CombatListener implements Listener {
 
     public void addPlayerNoCollision(Player player) {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-        Team team = scoreboard.getTeam("no-collision");
+        String teamName = "no-collide-" + player.getUniqueId().toString().substring(0, 16);
+
+        Team team = scoreboard.getTeam(teamName);
         if (team == null) {
-            team = scoreboard.registerNewTeam("no-collision");
+            team = scoreboard.registerNewTeam(teamName);
             team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
         }
         team.addEntry(player.getName());
